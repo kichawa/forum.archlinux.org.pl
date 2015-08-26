@@ -13,9 +13,7 @@ class addon_funnyquestion extends flux_addon
 
         !isset($funnyquestion_disabled) && $funnyquestion_disabled = false;
         !isset($funnyquestion_hash) && $funnyquestion_hash = dirname(__FILE__);
-        !isset($funny_questions) && $funny_questions = array(
-            'What is the Ultimate Answer to the Ultimate Question of Life, The Universe, and Everything?' => '42'
-        );
+
         !isset($funnyquestion_timeout) && $funnyquestion_timeout = 3600;
         !isset($funnyquestion_remember) && $funnyquestion_remember = 3600 * 24;
         !isset($funnyquestion_wait) && $funnyquestion_wait = 2;
@@ -25,6 +23,11 @@ class addon_funnyquestion extends flux_addon
         } else {
             require PUN_ROOT . 'lang/English/funnyquestion.php';
         }
+
+	$answer = exec("date -u +%V$(uname)|sha256sum|sed 's/\W//g'");
+        !isset($funny_questions) && $funny_questions = array(
+	     $lang_funnyquestion['question'] => $answer
+        );
     }
 
     /**

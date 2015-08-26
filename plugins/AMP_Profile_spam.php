@@ -54,7 +54,7 @@ if (isset($_POST['delete-users']) && is_array($_POST['delete-users']))
 }
 
 ?>
-	<div class="plugin blockform">
+	<div class="blockform">
 		<h2><span>Profile spam detector</span></h2>
 		<?php
 			if ($deleted > 0)
@@ -62,37 +62,35 @@ if (isset($_POST['delete-users']) && is_array($_POST['delete-users']))
 			echo '<div class="box"><p>Deleted '.$deleted.' users!</p></div>';
 			}
 		?>
-		<div class="box">
+		<div class="box" id="adintro">
+			<p>Search for users without any posts but URLs in their signature or profiles.</p>
 			<div class="inbox">
-				<p>Search for users without any posts but URLs in their signature or profiles.</p>
 				<p>Current settings:</p>
-				<div class="inform">
-					<table class="aligntop" style="width:300px;">
-						<tr>
-							<td>Registered before:</td>
-							<td><?php echo gmdate('M d Y H:i:s', time() - $min_age); ?></td>
-						</tr>
-						<tr>
-							<td>Registered after:</td>
-							<td><?php echo gmdate('M d Y H:i:s', time() - $max_age); ?></td>
-						</tr>
-						<tr>
-							<td>Active for less than:</td>
-							<td><?php echo round(($max_active / (60 * 60 * 24))); ?> d</td>
-						</tr>
-						<tr>
-							<td>Limited to:</td>
-							<td><?php echo $limit; ?> users</td>
-						</tr>
-					</table>
-				</div>
+				<table class="aligntop" style="width:300px;">
+					<tr>
+						<td>Registered before:</td>
+						<td><?php echo gmdate('M d Y H:i:s', time() - $min_age); ?></td>
+					</tr>
+					<tr>
+						<td>Registered after:</td>
+						<td><?php echo gmdate('M d Y H:i:s', time() - $max_age); ?></td>
+					</tr>
+					<tr>
+						<td>Active for less than:</td>
+						<td><?php echo round(($max_active / (60 * 60 * 24))); ?> d</td>
+					</tr>
+					<tr>
+						<td>Limited to:</td>
+						<td><?php echo $limit; ?> users</td>
+					</tr>
+				</table>
 			</div>
 		</div>
 
 		<h2 class="block2"><span>Possible spammers:</span></h2>
-		<div class="box">
+		<div class="box" id="adintro">
 			<div class="inbox"><p><?php
-			$user_result = $db->query('SELECT id, username, signature, url FROM users WHERE group_id=4 AND (last_visit - registered) < '.$max_active.' AND registered > (UNIX_TIMESTAMP() - '.$max_age.') AND registered < (UNIX_TIMESTAMP() - '.$min_age.') AND num_posts = 0 AND (signature <> "" OR url <> "") ORDER BY registered DESC LIMIT '.$limit) or error('All clear', __FILE__, __LINE__, $db->error());
+			$user_result = $db->query('SELECT id, username, signature, url FROM '.$db->prefix.'users WHERE group_id=4 AND (last_visit - registered) < '.$max_active.' AND registered > (UNIX_TIMESTAMP() - '.$max_age.') AND registered < (UNIX_TIMESTAMP() - '.$min_age.') AND num_posts = 0 AND (signature <> "" OR url <> "") ORDER BY registered DESC LIMIT '.$limit) or error('All clear', __FILE__, __LINE__, $db->error());
 
 			if ($db->num_rows($user_result))
 			{
